@@ -17,6 +17,12 @@ HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_TOKEN") or os.getenv("HUGGINGFACE
 OPENAI_API_KEY = os.getenv("OPENAI_TOKEN") or os.getenv("OPENAI_API_KEY")
 
 
+# Cache the image-to-text pipeline to avoid reloading
+@st.cache_resource
+def load_image_to_text_pipeline():
+    return pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+
+
 def progress_bar(amount_of_time: int) -> Any:
     """
     A very simple progress bar the increases over time,
@@ -40,7 +46,7 @@ def generate_text_from_image(url: str) -> str:
     :param url: image location
     :return: text: generated text from the image
     """
-    image_to_text: Any = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+    image_to_text = load_image_to_text_pipeline()
 
     generated_text: str = image_to_text(url)[0]["generated_text"]
 
