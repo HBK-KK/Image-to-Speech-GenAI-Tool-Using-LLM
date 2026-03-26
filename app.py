@@ -5,9 +5,8 @@ from typing import Any
 import requests
 import streamlit as st
 from dotenv import find_dotenv, load_dotenv
-from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
 from transformers import pipeline
 
 from utils.custom import css_code
@@ -69,9 +68,9 @@ def generate_story_from_text(scenario: str) -> str:
 
     llm: Any = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.9)
 
-    story_llm: Any = LLMChain(llm=llm, prompt=prompt, verbose=True)
-
-    generated_story: str = story_llm.predict(scenario=scenario)
+    # Use LCEL (LangChain Expression Language) instead of deprecated LLMChain
+    chain = prompt | llm
+    generated_story: str = chain.invoke({"scenario": scenario}).content
 
     print(f"TEXT INPUT: {scenario}")
     print(f"GENERATED STORY OUTPUT: {generated_story}")
