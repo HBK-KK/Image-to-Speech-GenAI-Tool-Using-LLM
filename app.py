@@ -13,8 +13,9 @@ from transformers import pipeline
 from utils.custom import css_code
 
 load_dotenv(find_dotenv())
-HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# Support the requested .env variable names, with fallback for backward compatibility
+HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_TOKEN") or os.getenv("HUGGINGFACE_API_TOKEN")
+OPENAI_API_KEY = os.getenv("OPENAI_TOKEN") or os.getenv("OPENAI_API_KEY")
 
 
 def progress_bar(amount_of_time: int) -> Any:
